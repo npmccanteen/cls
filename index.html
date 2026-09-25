@@ -9,7 +9,7 @@
 <link rel="icon" href="logo.jpg">
 <link rel="apple-touch-icon" href="logo.jpg">
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
-<script src="html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
   :root{
     --primary:#0f4c75; --primary-2:#3282b8;
@@ -34,7 +34,23 @@
   }
   .subtitle{text-align:center; color:var(--muted); font-size:13px; margin-bottom:18px;}
 
-  /* ========== LOGO ========== */
+  /* TABS */
+  .tab-bar{
+    display:flex; background:#e8f2fb; border-radius:14px;
+    padding:5px; margin-bottom:16px; gap:4px;
+  }
+  .tab-btn{
+    flex:1; padding:11px 10px; border:none; background:transparent;
+    border-radius:10px; font-weight:700; font-size:13px;
+    color:var(--primary); cursor:pointer; font-family:inherit;
+    margin-top:0; transition:.2s;
+  }
+  .tab-btn.active{
+    background:#fff;
+    box-shadow:0 3px 10px rgba(15,76,117,.12);
+  }
+
+  /* LOGO */
   .logo-wrap{text-align:center; margin-bottom:8px;}
   .login-logo{
     width:130px; height:130px; object-fit:contain;
@@ -55,7 +71,7 @@
   .app-header h2{margin:0; font-size:20px; text-align:left;}
   .app-header .subtitle{margin:2px 0 0; text-align:left; font-size:12px;}
 
-  /* ========== INPUTS ========== */
+  /* INPUTS */
   .login-input{
     width:100%; padding:14px; margin:10px 0; border:2px solid #dbe4ee;
     border-radius:12px; text-align:center; font-size:16px; outline:none;
@@ -93,7 +109,7 @@
   .type-options input{display:none;}
   .type-options label:has(input:checked){background:var(--primary-2); color:#fff; border-color:var(--primary-2);}
 
-  input[type="text"], input[type="date"], select, textarea{
+  input[type="text"], input[type="date"], input[type="search"], select, textarea{
     width:100%; padding:10px 12px; border:1.5px solid #dbe4ee;
     border-radius:10px; background:#fff; font-family:inherit; font-size:14px;
     outline:none; margin-top:6px;
@@ -117,7 +133,7 @@
   .btn-back{background:#e8eef5; color:var(--primary);}
   .btn-reset{background:#fdecea; color:var(--danger);}
 
-  /* ========== PREMIUM CARD — WHITE THEME ========== */
+  /* PREMIUM CARD */
   #preview-section{display:none;}
   #capture-area{
     background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
@@ -214,8 +230,6 @@
     letter-spacing: .4px;
     box-shadow: 0 6px 14px -4px rgba(15,76,117,.4);
   }
-
-  /* ========== Modern Table ========== */
   table{
     width: 100%;
     border-collapse: separate;
@@ -236,8 +250,6 @@
     letter-spacing: .5px;
     text-transform: uppercase;
   }
-
-  /* Base table cell */
   td{
     border-bottom: 1px solid #e2e8f0;
     border-right: 1px solid #e2e8f0;
@@ -249,8 +261,6 @@
     background: #ffffff;
     line-height: 1.4;
   }
-
-  /* Default rows (কিছু select করা না থাকলে) — হালকা gray */
   tbody tr:not(.bg-lec):not(.bg-prac):not(.bg-item) td{
     background: #f1f5f9;
     color: #334155;
@@ -258,38 +268,25 @@
   tbody tr:not(.bg-lec):not(.bg-prac):not(.bg-item):nth-child(even) td{
     background: #e2e8f0;
   }
-
-  /* ========== LEC = Indigo/Purple ========== */
   tbody tr.bg-lec td{
     background: #ddd6fe;
     color: #4c1d95;
     border-color: #c4b5fd;
   }
-  tbody tr.bg-lec td:first-child{
-    border-left: 5px solid #7c3aed;
-  }
-
-  /* ========== PRAC = Soft Green ========== */
+  tbody tr.bg-lec td:first-child{ border-left: 5px solid #7c3aed; }
   tbody tr.bg-prac td{
     background: #bbf7d0;
     color: #14532d;
     border-color: #86efac;
   }
-  tbody tr.bg-prac td:first-child{
-    border-left: 5px solid #16a34a;
-  }
-
-  /* ========== ITEM = Soft Pink ========== */
+  tbody tr.bg-prac td:first-child{ border-left: 5px solid #16a34a; }
   tbody tr.bg-item td{
     background: #fbcfe8;
     color: #831843;
     border-color: #f9a8d4;
   }
-  tbody tr.bg-item td:first-child{
-    border-left: 5px solid #db2777;
-  }
+  tbody tr.bg-item td:first-child{ border-left: 5px solid #db2777; }
 
-  /* Notice box */
   .notice-box-preview{
     margin-top: 22px;
     padding: 16px 18px;
@@ -354,7 +351,7 @@
     box-shadow: 0 4px 12px rgba(200,30,20,.15);
   }
 
-  /* ========== PUBLISHED VIEW ========== */
+  /* PUBLISHED CARDS */
   .published-card{
     background:#fff; border-radius:18px; padding:20px;
     box-shadow:0 8px 24px rgba(15,76,117,.12);
@@ -379,10 +376,222 @@
     background:#f4f8fc; padding:3px 8px; border-radius:20px;
   }
   #published-list{display:flex; flex-direction:column; gap:12px;}
+
+  /* TEACHER TRACKER - Subject wise */
+  .search-box{
+    width:100%;
+    padding:12px 16px;
+    border:1.5px solid #dbe4ee;
+    border-radius:12px;
+    font-size:14px;
+    font-family:inherit;
+    outline:none;
+    background:#f8fbff;
+    margin-bottom:16px;
+    transition:.2s;
+  }
+  .search-box:focus{border-color:var(--primary-2); background:#fff;}
+
+  /* Subject Section */
+  .subject-section{
+    margin-bottom:18px;
+  }
+  .subject-heading{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:12px 14px;
+    background:linear-gradient(135deg, var(--primary), var(--primary-2));
+    color:#fff;
+    border-radius:14px 14px 0 0;
+    font-size:15px;
+    font-weight:800;
+    letter-spacing:.3px;
+    cursor:pointer;
+    user-select:none;
+    transition:.2s;
+  }
+  .subject-heading:hover{
+    filter:brightness(1.08);
+  }
+  .subject-heading .left{
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .subject-heading .count-badge{
+    background:rgba(255,255,255,.25);
+    padding:3px 10px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:800;
+  }
+  .subject-heading .arrow{
+    font-size:13px;
+    transition:transform .3s;
+  }
+  .subject-section.collapsed .arrow{
+    transform:rotate(-90deg);
+  }
+  .subject-section.collapsed .subject-body{
+    display:none;
+  }
+  .subject-body{
+    background:#f8fbff;
+    padding:12px;
+    border-radius:0 0 14px 14px;
+    border:1.5px solid #e1e9f2;
+    border-top:none;
+  }
+
+  /* Teacher card inside subject */
+  .teacher-card{
+    background:#fff;
+    border-radius:12px;
+    padding:13px 14px;
+    margin-bottom:10px;
+    box-shadow:0 3px 10px rgba(15,76,117,.06);
+    border-left:4px solid var(--primary-2);
+    cursor:pointer;
+    transition:.2s;
+  }
+  .teacher-card:last-child{
+    margin-bottom:0;
+  }
+  .teacher-card:hover{
+    box-shadow:0 6px 18px rgba(15,76,117,.13);
+  }
+  .teacher-card.open{
+    background:#f0f7ff;
+  }
+  .teacher-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+  }
+  .teacher-name{
+    font-size:14px;
+    font-weight:800;
+    color:var(--primary);
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .teacher-count{
+    font-size:10.5px;
+    font-weight:700;
+    color:#fff;
+    background:linear-gradient(135deg, var(--primary), var(--primary-2));
+    padding:4px 10px;
+    border-radius:20px;
+    white-space:nowrap;
+  }
+  .teacher-topics{
+    margin-top:12px;
+    padding-top:12px;
+    border-top:1px dashed #dbe4ee;
+    display:none;
+  }
+  .teacher-card.open .teacher-topics{
+    display:block;
+    animation: slideDown .3s ease;
+  }
+  @keyframes slideDown{
+    from{opacity:0; transform:translateY(-8px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+  .topic-item{
+    display:flex;
+    gap:10px;
+    padding:10px 0;
+    border-bottom:1px solid #f0f4f8;
+    font-size:12.5px;
+  }
+  .topic-item:last-child{ border-bottom:none; }
+  .topic-date{
+    font-weight:800;
+    color:var(--primary);
+    white-space:nowrap;
+    font-size:11px;
+    min-width:60px;
+  }
+  .topic-body{ flex:1; }
+  .topic-name{
+    font-weight:700;
+    color:#1e2a38;
+    margin-bottom:3px;
+    line-height:1.4;
+  }
+  .topic-meta{
+    font-size:10.5px;
+    color:var(--muted);
+    font-weight:600;
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .topic-type-badge{
+    display:inline-block;
+    padding:2px 8px;
+    border-radius:10px;
+    font-size:9.5px;
+    font-weight:800;
+    letter-spacing:.3px;
+  }
+  .badge-lec{ background:#ddd6fe; color:#4c1d95; }
+  .badge-prac{ background:#bbf7d0; color:#14532d; }
+  .badge-item{ background:#fbcfe8; color:#831843; }
+
+  .stats-bar{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-bottom:16px;
+  }
+  .stat-card{
+    background:linear-gradient(135deg, #fff 0%, #f4f8fc 100%);
+    border-radius:14px;
+    padding:14px;
+    text-align:center;
+    border:1.5px solid #e1e9f2;
+  }
+  .stat-value{
+    font-size:22px;
+    font-weight:900;
+    color:var(--primary);
+    line-height:1;
+    font-family:'Poppins',sans-serif;
+  }
+  .stat-label{
+    font-size:10.5px;
+    color:var(--muted);
+    font-weight:700;
+    margin-top:5px;
+    letter-spacing:.3px;
+  }
+
   .empty-state{
     text-align:center; padding:30px 10px; color:var(--muted);
     font-size:13px;
   }
+  .loading-spinner{
+    text-align:center;
+    padding:30px;
+    color:var(--muted);
+    font-size:13px;
+  }
+  .spinner{
+    display:inline-block;
+    width:24px; height:24px;
+    border:3px solid #dbe4ee;
+    border-top-color:var(--primary-2);
+    border-radius:50%;
+    animation: spin .8s linear infinite;
+    margin-bottom:8px;
+  }
+  @keyframes spin{ to{ transform: rotate(360deg); } }
+
   .install-banner{
     display:none; background:#fff8e1; border:1.5px dashed #f1c40f;
     padding:10px 14px; border-radius:12px; font-size:13px;
@@ -406,6 +615,9 @@
     text-decoration:underline;
   }
   .cr-link:hover{color:var(--primary);}
+
+  .view-section{ display:none; }
+  .view-section.active{ display:block; }
 </style>
 </head>
 <body>
@@ -416,12 +628,48 @@
     <img src="logo.jpg" alt="logo" class="app-logo" onerror="this.style.display='none'">
     <div>
       <h2>Arundeepto</h2>
-      <p class="subtitle">সর্বশেষ প্রকাশিত সিডিউল</p>
+      <p class="subtitle">Batch 08 • Live Updates</p>
     </div>
   </div>
-  <div id="published-list">
-    <div class="empty-state">⏳ লোড হচ্ছে...</div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tab-schedule" onclick="switchTab('schedule')">📅 Schedule</button>
+    <button class="tab-btn" id="tab-teachers" onclick="switchTab('teachers')">📖 Teacher Progress</button>
   </div>
+
+  <!-- Schedule Tab -->
+  <div id="view-schedule" class="view-section active">
+    <div id="published-list">
+      <div class="loading-spinner">
+        <div class="spinner"></div>
+        <div>⏳ লোড হচ্ছে...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Teachers Tab -->
+  <div id="view-teachers" class="view-section">
+    <div class="stats-bar">
+      <div class="stat-card">
+        <div class="stat-value" id="stat-teachers">0</div>
+        <div class="stat-label">👨‍🏫 Teachers</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-topics">0</div>
+        <div class="stat-label">📚 Topics Covered</div>
+      </div>
+    </div>
+    <input type="search" class="search-box" id="teacher-search"
+           placeholder="🔍 Teacher বা Topic search করুন..."
+           oninput="renderTeachers()">
+    <div id="teachers-list">
+      <div class="loading-spinner">
+        <div class="spinner"></div>
+        <div>⏳ লোড হচ্ছে...</div>
+      </div>
+    </div>
+  </div>
+
   <a class="cr-link" onclick="showLogin()">🔐 CR Login</a>
 </div>
 
@@ -571,6 +819,14 @@ const teacherData = {
   "Physiology":["Dr. Shila Ma'am","Dr. Liza Ma'am","Dr. Sara Ma'am","Dr. Bipasha Ma'am","Dr. Tritiya Ma'am","Dr. Kashfi Ma'am"]
 };
 
+/* Subject display order + icon */
+const subjectOrder = ["Anatomy", "Physiology", "Biochemistry"];
+const subjectIcons = {
+  "Anatomy": "🧬",
+  "Physiology": "⚡",
+  "Biochemistry": "🧪"
+};
+
 const scheduleTimes = ["08:00 - 10:00","10:30 - 12:30","12:30 - 14:30"];
 
 /* ============ BUILD FORM ============ */
@@ -605,6 +861,21 @@ window.updateTeachers = function(i){
   }
 };
 
+/* ============ TAB SWITCHING ============ */
+window.switchTab = function(tab){
+  document.querySelectorAll('.view-section').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+
+  if(tab === 'schedule'){
+    document.getElementById('view-schedule').classList.add('active');
+    document.getElementById('tab-schedule').classList.add('active');
+  } else {
+    document.getElementById('view-teachers').classList.add('active');
+    document.getElementById('tab-teachers').classList.add('active');
+  }
+  window.scrollTo(0,0);
+};
+
 /* ============ NAV ============ */
 window.showLogin = function(){
   document.getElementById('public-section').style.display='none';
@@ -626,7 +897,7 @@ window.logout = function(){
   showPublic();
 };
 
-/* ============ LOGIN (auto-fill) ============ */
+/* ============ LOGIN ============ */
 window.checkAccess = function(){
   const code = document.getElementById('pass-code').value.trim();
   if(crCodes[code]){
@@ -730,16 +1001,32 @@ window.hidePreview = function(){
 /* ============ DOWNLOAD ============ */
 window.downloadImage = function(ev){
   const btn = ev.target;
+  const orig = btn.innerText;
   btn.innerText='⏳ তৈরি হচ্ছে...'; btn.disabled=true;
-  html2canvas(document.querySelector("#capture-area"),{scale:3, backgroundColor:'#ffffff'})
-    .then(canvas=>{
-      const link = document.createElement('a');
-      const date = document.getElementById('date-schedule').value || 'schedule';
-      link.download = `Arundeepto_${date}.png`;
-      link.href = canvas.toDataURL("image/png");
-      link.click();
-      btn.innerText='⬇️ Download Image'; btn.disabled=false;
-    });
+
+  if(typeof html2canvas === 'undefined'){
+    toast('❌ html2canvas লোড হয়নি! Internet চেক করুন।');
+    btn.innerText=orig; btn.disabled=false; return;
+  }
+
+  html2canvas(document.querySelector("#capture-area"), {
+    scale: 3, backgroundColor: '#ffffff', useCORS: true, logging: false
+  })
+  .then(canvas=>{
+    const link = document.createElement('a');
+    const date = document.getElementById('date-schedule').value || 'schedule';
+    link.download = `Arundeepto_${date}.png`;
+    link.href = canvas.toDataURL("image/png");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    btn.innerText=orig; btn.disabled=false;
+  })
+  .catch(err=>{
+    console.error(err);
+    toast('❌ Image তৈরি ব্যর্থ: '+err.message);
+    btn.innerText=orig; btn.disabled=false;
+  });
 };
 
 /* ============ PUBLISH ============ */
@@ -759,11 +1046,38 @@ window.publishSchedule = async function(ev){
     if(!auth.currentUser){
       await signInAnonymously(auth);
     }
-    await addDoc(collection(db, "schedules"), {
+
+    const schedRef = await addDoc(collection(db, "schedules"), {
       ...data,
       createdAt: serverTimestamp()
     });
-    toast('✅ সফলভাবে publish হয়েছে! সবাই এখন দেখতে পাবে।');
+
+    if(data.showSchedule){
+      const topicPromises = [];
+      for(let r of data.rows){
+        if(r.teachers && r.teachers.length && r.topic && r.subject){
+          for(let teacher of r.teachers){
+            const type = r.lec ? "Lec" : (r.prac ? "Prac" : (r.item ? "Item" : ""));
+            topicPromises.push(
+              addDoc(collection(db, "topicTracker"), {
+                teacher: teacher,
+                subject: r.subject,
+                topic: r.topic,
+                date: data.dateSchedule,
+                timeSlot: r.time,
+                type: type,
+                announcer: data.announcer,
+                scheduleId: schedRef.id,
+                createdAt: serverTimestamp()
+              })
+            );
+          }
+        }
+      }
+      await Promise.all(topicPromises);
+    }
+
+    toast('✅ Publish হয়েছে! Teacher tracker ও update হয়েছে।');
     btn.innerText = '🚀 Publish for Everyone'; btn.disabled = false;
   } catch(err){
     console.error(err);
@@ -799,7 +1113,7 @@ function toast(msg){
 }
 window.toast = toast;
 
-/* ============ PUBLIC VIEW — Real-time ============ */
+/* ============ PUBLIC VIEW — Realtime Schedules ============ */
 const pubList = document.getElementById('published-list');
 
 const q = query(
@@ -872,6 +1186,169 @@ onSnapshot(q, (snap)=>{
   console.error(err);
   pubList.innerHTML = `<div class="empty-state">⚠️ ডেটা লোড করা যাচ্ছে না। Firebase rules চেক করুন।</div>`;
 });
+
+/* ============ TEACHER TRACKER — Subject Wise ============ */
+let allTopics = [];
+let subjectMap = {};   // { Anatomy: { teacherName: { topics: [...] } } }
+
+const qTopics = query(
+  collection(db, "topicTracker"),
+  orderBy("createdAt", "desc"),
+  limit(500)
+);
+
+onSnapshot(qTopics, (snap)=>{
+  allTopics = [];
+  subjectMap = {};
+  let teacherSet = new Set();
+
+  snap.forEach(doc=>{
+    const d = doc.data();
+    allTopics.push(d);
+
+    if(!d.subject || !d.teacher) return;
+
+    if(!subjectMap[d.subject]){
+      subjectMap[d.subject] = {};
+    }
+    if(!subjectMap[d.subject][d.teacher]){
+      subjectMap[d.subject][d.teacher] = {
+        name: d.teacher,
+        topics: []
+      };
+    }
+    subjectMap[d.subject][d.teacher].topics.push(d);
+    teacherSet.add(d.teacher);
+  });
+
+  document.getElementById('stat-teachers').innerText = teacherSet.size;
+  document.getElementById('stat-topics').innerText = allTopics.length;
+
+  renderTeachers();
+}, (err)=>{
+  console.error('Topic tracker error:', err);
+  document.getElementById('teachers-list').innerHTML =
+    `<div class="empty-state">⚠️ Topic data লোড করা যাচ্ছে না। Firestore index build হতে পারে।<br><span style="font-size:11px;">Console এ "Create index" link থাকলে click করুন।</span></div>`;
+});
+
+/* ============ RENDER — SUBJECT WISE ============ */
+window.renderTeachers = function(){
+  const searchTerm = (document.getElementById('teacher-search').value || '').toLowerCase().trim();
+  const list = document.getElementById('teachers-list');
+
+  // Collect all subjects (from subjectOrder first, then any others)
+  const allSubjects = [
+    ...subjectOrder.filter(s => subjectMap[s]),
+    ...Object.keys(subjectMap).filter(s => !subjectOrder.includes(s))
+  ];
+
+  if(allSubjects.length === 0){
+    list.innerHTML = searchTerm
+      ? `<div class="empty-state">🔍 "${searchTerm}" এর জন্য কিছু পাওয়া যায়নি।</div>`
+      : `<div class="empty-state">
+          📭 এখনো কোনো teacher topic নেই।<br>
+          <span style="font-size:11px;">CR schedule publish করলে এখানে auto-add হবে।</span>
+        </div>`;
+    return;
+  }
+
+  let html = '';
+  let anyMatch = false;
+
+  allSubjects.forEach(subject=>{
+    const teachersInSubject = subjectMap[subject];
+    if(!teachersInSubject) return;
+
+    // Filter teachers/topics by search
+    const teachersArray = Object.values(teachersInSubject).map(t => {
+      const filteredTopics = t.topics.filter(topic => {
+        if(!searchTerm) return true;
+        const haystack = (topic.topic + ' ' + topic.teacher + ' ' + topic.subject).toLowerCase();
+        return haystack.includes(searchTerm);
+      });
+      return { ...t, topics: filteredTopics };
+    }).filter(t => t.topics.length > 0);
+
+    if(teachersArray.length === 0) return;
+    anyMatch = true;
+
+    // Sort teachers by topic count desc
+    teachersArray.sort((a,b)=> b.topics.length - a.topics.length);
+
+    // Total topics in this subject
+    const totalTopics = teachersArray.reduce((sum, t) => sum + t.topics.length, 0);
+    const icon = subjectIcons[subject] || '📚';
+
+    const teachersHtml = teachersArray.map((t, idx)=>{
+      const teachersTopicsHtml = t.topics.map(topic=>{
+        let badge = '';
+        if(topic.type === 'Lec') badge = '<span class="topic-type-badge badge-lec">LEC</span>';
+        else if(topic.type === 'Prac') badge = '<span class="topic-type-badge badge-prac">PRAC</span>';
+        else if(topic.type === 'Item') badge = '<span class="topic-type-badge badge-item">ITEM</span>';
+
+        return `
+          <div class="topic-item">
+            <div class="topic-date">${formatDate(topic.date)}</div>
+            <div class="topic-body">
+              <div class="topic-name">${topic.topic}</div>
+              <div class="topic-meta">
+                ${badge}
+                <span>⏰ ${topic.timeSlot}</span>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+
+      const uniqueId = `${subject.replace(/\s+/g,'_')}-teacher-${idx}`;
+      return `
+        <div class="teacher-card" id="${uniqueId}" onclick="toggleTeacher('${uniqueId}')">
+          <div class="teacher-head">
+            <div class="teacher-name">👨‍🏫 ${t.name}</div>
+            <div class="teacher-count">${t.topics.length} classes</div>
+          </div>
+          <div class="teacher-topics">${teachersTopicsHtml}</div>
+        </div>`;
+    }).join('');
+
+    const safeSubjectId = subject.replace(/\s+/g,'_');
+    html += `
+      <div class="subject-section" id="subject-${safeSubjectId}">
+        <div class="subject-heading" onclick="toggleSubject('${safeSubjectId}')">
+          <div class="left">
+            <span>${icon} ${subject}</span>
+            <span class="count-badge">${totalTopics} topics</span>
+          </div>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="subject-body">
+          ${teachersHtml}
+        </div>
+      </div>`;
+  });
+
+  if(!anyMatch){
+    list.innerHTML = `<div class="empty-state">🔍 "${searchTerm}" এর জন্য কিছু পাওয়া যায়নি।</div>`;
+    return;
+  }
+
+  list.innerHTML = html;
+};
+
+/* Toggle subject collapse */
+window.toggleSubject = function(subjectId){
+  const el = document.getElementById('subject-' + subjectId);
+  if(!el) return;
+  el.classList.toggle('collapsed');
+};
+
+/* Toggle teacher expand */
+window.toggleTeacher = function(id){
+  const card = document.getElementById(id);
+  if(!card) return;
+  // Stop propagation so clicking inside doesn't collapse subject
+  event.stopPropagation();
+  card.classList.toggle('open');
+};
 
 /* ============ PWA ============ */
 let deferredPrompt;
