@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<!-- saved from url=(0033)https://arundeepto.github.io/cls/ -->
+<html lang="bn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arundeepto - Schedule Maker</title>
+    <script src="./Arundeepto - Schedule Maker_files/html2canvas.min.js.download"></script>
+    <style>
+        :root { --primary: #2c3e50; --lec: #d6eaf8; --prac: #d4efdf; --item: #f9ebea; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg); padding: 10px; margin: 0; color: #333; }
+        .container { max-width: 500px; margin: 10px auto; background: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
+        h2 { color: var(--primary); text-align: center; margin-bottom: 15px; font-weight: 800; }
+        
+        .login-input { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 8px; box-sizing: border-box; text-align: center; font-size: 16px; }
+        #app-content { display: none; }
+
+        .toggle-group { display: flex; gap: 10px; margin-bottom: 15px; padding: 10px; background: #f0f4f8; border-radius: 10px; font-size: 14px; }
+        .input-group { margin-bottom: 15px; }
+        .row-label { font-weight: 600; color: var(--primary); display: block; margin-bottom: 5px; font-size: 13px; }
+        
+        .type-options { display: flex; gap: 15px; margin: 5px 0; font-size: 13px; font-weight: bold; background: #f9f9f9; padding: 8px; border-radius: 6px; }
+        input, select, textarea { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        
+        button { width: 100%; padding: 10px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 10px; transition: 0.3s; }
+        .btn-view { background: var(--primary); color: white; }
+        .btn-dl { background: #27ae60; color: white; }
+        .btn-back { background: #95a5a6; color: white; }
+
+        #preview-section { display: none; }
+        #capture-area { background: #ffffff; padding: 25px; width: 450px; margin: auto; border: 1px solid #eee; border-radius: 15px; position: relative; overflow: hidden;}
+        
+        .correction-badge { 
+            display: none; 
+            position: absolute; 
+            top: 5px; 
+            left: 5px; 
+            color: rgba(200, 30, 20, 0.9); 
+            border: 4px solid rgba(200, 30, 20, 0.9); 
+            padding: 2px 8px; 
+            font-size: 18px; 
+            font-weight: 900; 
+            transform: rotate(-20deg); 
+            z-index: 100; 
+            pointer-events: none; 
+            border-radius: 5px; 
+            text-transform: uppercase; 
+        }
+
+        .header-box { text-align: center; padding-bottom: 10px; margin-bottom: 15px; border-bottom: 2px dashed #dcdcdc; }
+        .logo-img { width: 80px; height: auto; margin-bottom: 10px; }
+        .college-name { font-size: 18px; font-weight: 800; color: #2c3e50; text-transform: uppercase; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; border-radius: 8px; overflow: hidden; }
+        th { background: #2c3e50; color: white; padding: 8px; font-size: 11px; }
+        td { border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 11px; font-weight: 600; }
+        
+        .bg-lec { background-color: var(--lec) !important; }
+        .bg-prac { background-color: var(--prac) !important; }
+        .bg-item { background-color: var(--item) !important; }
+        
+        .notice-box-preview { margin-top: 20px; padding: 15px; background: #fff; border: 2px solid #f1c40f; border-radius: 10px; }
+        .notice-header { color: #d35400; font-weight: 800; font-size: 14px; margin-bottom: 5px; border-bottom: 1px solid #f1c40f; }
+        .notice-content-preview { font-size: 13px; color: #000; font-weight: bold; }
+        .footer-credit { text-align: center; margin-top: 20px; font-size: 9px; color: #b9b9b9; }
+    </style>
+</head>
+<body>
+
+<div class="container" id="login-section" style="display: none;">
+    <h2>Login Access</h2>
+    <input type="password" id="pass-code" class="login-input" placeholder="Enter Access Code">
+    <button class="btn-view" onclick="checkAccess()">Enter</button>
+    <p id="error-msg" style="color:red; font-size:12px; text-align:center;"></p>
+</div>
+
+<div id="app-content" style="display: block;">
+    <div class="container">
+        <h2>Arundeepto</h2>
+        <div class="toggle-group">
+            <label><input type="checkbox" id="inc-schedule" checked=""> সিডিউল</label>
+            <label><input type="checkbox" id="inc-notice" checked=""> নোটিশ</label>
+            <label><input type="checkbox" id="inc-correction"> <span style="color:red; font-weight:bold;">সংশোধিত</span></label>
+        </div>
+
+        <div class="input-group">
+            <span class="row-label">সিডিউলের তারিখ</span>
+            <input type="date" id="date-schedule">
+        </div>
+
+        <div id="fields">
+            <div class="input-group" style="background:#f4f4f4; padding:10px; border-radius:8px;">
+                <span class="row-label">08:00 - 10:00</span>
+                <select id="sub0" onchange="updateTeachers(0)"><option value="">Subject</option><option value="Anatomy">Anatomy</option><option value="Biochemistry">Biochemistry</option><option value="Physiology">Physiology</option></select>
+                
+                <div class="type-options">
+                    <label><input type="checkbox" id="lec0"> Lec</label>
+                    <label><input type="checkbox" id="prac0"> Prac</label>
+                    <label><input type="checkbox" id="item0"> Item</label>
+                </div>
+                
+                <input type="text" placeholder="Topic" id="top0" style="margin-top:5px;">
+                <select id="teach0" multiple="" style="margin-top:5px; height:60px;"></select>
+            </div>
+        
+            <div class="input-group" style="background:#f4f4f4; padding:10px; border-radius:8px;">
+                <span class="row-label">10:30 - 12:30</span>
+                <select id="sub1" onchange="updateTeachers(1)"><option value="">Subject</option><option value="Anatomy">Anatomy</option><option value="Biochemistry">Biochemistry</option><option value="Physiology">Physiology</option></select>
+                
+                <div class="type-options">
+                    <label><input type="checkbox" id="lec1"> Lec</label>
+                    <label><input type="checkbox" id="prac1"> Prac</label>
+                    <label><input type="checkbox" id="item1"> Item</label>
+                </div>
+                
+                <input type="text" placeholder="Topic" id="top1" style="margin-top:5px;">
+                <select id="teach1" multiple="" style="margin-top:5px; height:60px;"></select>
+            </div>
+        
+            <div class="input-group" style="background:#f4f4f4; padding:10px; border-radius:8px;">
+                <span class="row-label">12:30 - 14:30</span>
+                <select id="sub2" onchange="updateTeachers(2)"><option value="">Subject</option><option value="Anatomy">Anatomy</option><option value="Biochemistry">Biochemistry</option><option value="Physiology">Physiology</option></select>
+                
+                <div class="type-options">
+                    <label><input type="checkbox" id="lec2"> Lec</label>
+                    <label><input type="checkbox" id="prac2"> Prac</label>
+                    <label><input type="checkbox" id="item2"> Item</label>
+                </div>
+                
+                <input type="text" placeholder="Topic" id="top2" style="margin-top:5px;">
+                <select id="teach2" multiple="" style="margin-top:5px; height:60px;"></select>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <span class="row-label">নোটিশের তারিখ</span>
+            <input type="date" id="date-notice">
+        </div>
+        <div class="input-group">
+            <span class="row-label">নোটিশের বিবরণ</span>
+            <textarea id="notice" placeholder="নোটিশ এখানে লিখুন..." rows="3"></textarea>
+        </div>
+        
+        <div class="input-group">
+            <span class="row-label">Announced by</span>
+            <select id="announced-by">
+                <option value="Munaf Wasif">Munaf Wasif</option>
+                <option value="Umme Salma">Umme Salma</option>
+            </select>
+        </div>
+        <button class="btn-view" onclick="showPreview()">প্রিভিউ দেখুন</button>
+    </div>
+</div>
+
+<div id="preview-section">
+    <div class="container">
+        <div id="capture-area">
+            <div id="correction-stamp" class="correction-badge">সংশোধিত</div>
+            <div class="header-box">
+                <img src="./Arundeepto - Schedule Maker_files/l.jpg" alt="Logo" class="logo-img">
+                <div class="college-name">Nilphamari Medical College</div>
+                <div style="font-size: 13px; font-style: italic;">Arundeepto</div>
+            </div>
+            
+            <div id="prev-schedule">
+                <div style="font-weight:bold; margin-bottom:5px; font-size: 13px; text-align:center;">Class Schedule | <span id="res-date-schedule"></span></div>
+                <table>
+                    <thead><tr><th>Time</th><th>Subject</th><th>Topic</th><th>Teacher</th></tr></thead>
+                    <tbody id="table-body"></tbody>
+                </table>
+            </div>
+
+            <div id="prev-notice" class="notice-box-preview">
+                <div class="notice-header">📢 Batch Notice</div>
+                <div style="font-size: 11px; margin-bottom: 5px; color: #666;">Date: <span id="res-date-notice"></span></div>
+                <div id="res-notice" class="notice-content-preview"></div>
+            </div>
+
+            <div style="text-align: right; margin-top: 10px; font-size: 11px; font-weight: bold; color: #555;">
+                Announced by: <span id="res-announcer"></span>
+            </div>
+            <div class="footer-credit">© 2026 | Arundeepto | IT Team | Developed by: Munaf Wasif</div>
+        </div>
+        <button class="btn-dl" onclick="downloadImage()">Download Image</button>
+        <button class="btn-back" onclick="hidePreview()">Back</button>
+    </div>
+</div>
+
+<script>
+    const crCodes = { "7777": "ABDUR ROUF", "1111": "Umme Salma" };
+    function checkAccess() {
+        const inputCode = document.getElementById('pass-code').value;
+        if (crCodes[inputCode]) {
+            document.getElementById('announced-by').value = crCodes[inputCode];
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('app-content').style.display = 'block';
+        } else {
+            document.getElementById('error-msg').innerText = "ভুল কোড!";
+        }
+    }
+
+    const teacherData = {
+        "Anatomy": ["Dr. Shamima Maam", "Dr. Farzana Maam", "Dr. Noman Sir", "Dr. Anup Sir", "Dr. Millat Sir", "Dr Paromita Maam"],
+        "Biochemistry": ["Dr. Mazed Sir", "Dr. Ayesha Maam", "Dr. Hadiuzzaman Sir", "Dr. Hasinur Sir", "Dr. Naima Maam", "Dr Irin Maam"],
+        "Physiology": ["Dr. Shila Maam", "Dr. Liza Maam", "Dr. Sara Maam", "Dr. Bipasha Maam","Dr. Tritiya Maam", "Dr Kashfi Maam"]
+    };
+
+    const scheduleTimes = ["08:00 - 10:00", "10:30 - 12:30", "12:30 - 14:30"];
+    const container = document.getElementById('fields');
+
+    scheduleTimes.forEach((time, index) => {
+        container.innerHTML += `
+            <div class="input-group" style="background:#f4f4f4; padding:10px; border-radius:8px;">
+                <span class="row-label">${time}</span>
+                <select id="sub${index}" onchange="updateTeachers(${index})"><option value="">Subject</option>${Object.keys(teacherData).map(s => `<option value="${s}">${s}</option>`).join('')}</select>
+                
+                <div class="type-options">
+                    <label><input type="checkbox" id="lec${index}"> Lec</label>
+                    <label><input type="checkbox" id="prac${index}"> Prac</label>
+                    <label><input type="checkbox" id="item${index}"> Item</label>
+                </div>
+                
+                <input type="text" placeholder="Topic" id="top${index}" style="margin-top:5px;">
+                <select id="teach${index}" multiple style="margin-top:5px; height:60px;"></select>
+            </div>
+        `;
+    });
+
+    function updateTeachers(index) {
+        const sub = document.getElementById(`sub${index}`).value;
+        const teachSelect = document.getElementById(`teach${index}`);
+        teachSelect.innerHTML = '';
+        if (sub && teacherData[sub]) {
+            teacherData[sub].forEach(t => {
+                let option = document.createElement('option');
+                option.value = t;
+                option.text = t;
+                // option.selected = true; // এই লাইনটি সরিয়ে দিয়েছি, তাই এখন অটো সিলেক্ট হবে না।
+                teachSelect.appendChild(option);
+            });
+        }
+    }
+
+    function formatDate(dateStr) {
+        if (!dateStr) return "";
+        const [y, m, d] = dateStr.split('-');
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        return `${d} ${months[parseInt(m) - 1]}, ${y}`;
+    }
+
+    function showPreview() {
+        document.getElementById('prev-schedule').style.display = document.getElementById('inc-schedule').checked ? 'block' : 'none';
+        document.getElementById('prev-notice').style.display = document.getElementById('inc-notice').checked ? 'block' : 'none';
+        document.getElementById('correction-stamp').style.display = document.getElementById('inc-correction').checked ? 'block' : 'none';
+        document.getElementById('res-announcer').innerText = document.getElementById('announced-by').value;
+        document.getElementById('res-date-schedule').innerText = formatDate(document.getElementById('date-schedule').value);
+        document.getElementById('res-date-notice').innerText = formatDate(document.getElementById('date-notice').value);
+        document.getElementById('res-notice').innerText = document.getElementById('notice').value;
+        
+        const tbody = document.getElementById('table-body');
+        tbody.innerHTML = '';
+        
+        scheduleTimes.forEach((time, index) => {
+            const sub = document.getElementById(`sub${index}`).value;
+            const top = document.getElementById(`top${index}`).value;
+            const teachSelect = document.getElementById(`teach${index}`);
+            const selectedTeachers = Array.from(teachSelect.selectedOptions).map(option => option.value).join(', ');
+            const isLec = document.getElementById(`lec${index}`).checked;
+            const isPrac = document.getElementById(`prac${index}`).checked;
+            const isItem = document.getElementById(`item${index}`).checked;
+
+            if(sub || top || selectedTeachers) {
+                let rowClass = isLec ? "bg-lec" : (isPrac ? "bg-prac" : (isItem ? "bg-item" : ""));
+                let types = [];
+                if (isLec) types.push("Lec"); if (isPrac) types.push("Prac"); if (isItem) types.push("Item");
+                let typeString = types.length > 0 ? `<b>[${types.join(', ')}]</b> ` : "";
+                tbody.innerHTML += `<tr class="${rowClass}"><td>${time}</td><td>${sub}</td><td>${typeString}${top}</td><td>${selectedTeachers}</td></tr>`;
+            }
+        });
+
+        document.getElementById('app-content').style.display = 'none';
+        document.getElementById('preview-section').style.display = 'block';
+    }
+
+    function hidePreview() {
+        document.getElementById('app-content').style.display = 'block';
+        document.getElementById('preview-section').style.display = 'none';
+    }
+
+    function downloadImage() {
+        html2canvas(document.querySelector("#capture-area"), {scale: 3}).then(canvas => {
+            const link = document.createElement('a');
+            link.download = 'Schedule_Notice.png';
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        });
+    }
+</script>
+
+
+</body></html>
