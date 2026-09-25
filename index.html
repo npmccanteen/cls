@@ -1,300 +1,898 @@
 <!DOCTYPE html>
-<!-- saved from url=(0033)https://arundeepto.github.io/cls/ -->
-<html lang="bn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arundeepto - Schedule Maker</title>
-    <script src="./Arundeepto - Schedule Maker_files/html2canvas.min.js.download"></script>
-    <style>
-        :root { --primary: #2c3e50; --lec: #d6eaf8; --prac: #d4efdf; --item: #f9ebea; --bg: #f4f7f6; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg); padding: 10px; margin: 0; color: #333; }
-        .container { max-width: 500px; margin: 10px auto; background: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
-        h2 { color: var(--primary); text-align: center; margin-bottom: 15px; font-weight: 800; }
-        
-        .login-input { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 8px; box-sizing: border-box; text-align: center; font-size: 16px; }
-        #app-content { display: none; }
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#0f4c75">
+<title>Arundeepto • Schedule Maker</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="logo.jpg">
+<link rel="apple-touch-icon" href="logo.jpg">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="html2canvas.min.js"></script>
+<style>
+  :root{
+    --primary:#0f4c75; --primary-2:#3282b8;
+    --accent:#27ae60; --danger:#c0392b;
+    --bg:#eef3f8; --card:#ffffff;
+    --text:#1e2a38; --muted:#6b7c93;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  body{
+    margin:0; font-family:'Hind Siliguri','Poppins',sans-serif;
+    background:linear-gradient(160deg,#eef3f8 0%,#dbe7f3 100%);
+    min-height:100vh; color:var(--text); padding:14px;
+  }
+  .container{
+    max-width:520px; margin:0 auto 16px; background:var(--card);
+    padding:22px; border-radius:20px;
+    box-shadow:0 10px 30px rgba(15,76,117,.10);
+  }
+  h2{
+    color:var(--primary); text-align:center; margin:0 0 4px;
+    font-family:'Poppins',sans-serif; font-weight:700;
+  }
+  .subtitle{text-align:center; color:var(--muted); font-size:13px; margin-bottom:18px;}
 
-        .toggle-group { display: flex; gap: 10px; margin-bottom: 15px; padding: 10px; background: #f0f4f8; border-radius: 10px; font-size: 14px; }
-        .input-group { margin-bottom: 15px; }
-        .row-label { font-weight: 600; color: var(--primary); display: block; margin-bottom: 5px; font-size: 13px; }
-        
-        .type-options { display: flex; gap: 15px; margin: 5px 0; font-size: 13px; font-weight: bold; background: #f9f9f9; padding: 8px; border-radius: 6px; }
-        input, select, textarea { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
-        
-        button { width: 100%; padding: 10px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 10px; transition: 0.3s; }
-        .btn-view { background: var(--primary); color: white; }
-        .btn-dl { background: #27ae60; color: white; }
-        .btn-back { background: #95a5a6; color: white; }
+  /* ========== LOGO ========== */
+  .logo-wrap{text-align:center; margin-bottom:8px;}
+  .login-logo{
+    width:130px; height:130px; object-fit:contain;
+    filter: drop-shadow(0 6px 14px rgba(15,76,117,.25));
+    animation: float 3s ease-in-out infinite;
+    border-radius: 50%;
+  }
+  @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+  .app-header{
+    display:flex; align-items:center; gap:14px;
+    padding-bottom:14px; margin-bottom:16px;
+    border-bottom:2px dashed #dbe4ee;
+  }
+  .app-logo{
+    width:55px; height:55px; object-fit:contain;
+    background:#f4f8fc; padding:6px; border-radius:14px;
+  }
+  .app-header h2{margin:0; font-size:20px; text-align:left;}
+  .app-header .subtitle{margin:2px 0 0; text-align:left; font-size:12px;}
 
-        #preview-section { display: none; }
-        #capture-area { background: #ffffff; padding: 25px; width: 450px; margin: auto; border: 1px solid #eee; border-radius: 15px; position: relative; overflow: hidden;}
-        
-        .correction-badge { 
-            display: none; 
-            position: absolute; 
-            top: 5px; 
-            left: 5px; 
-            color: rgba(200, 30, 20, 0.9); 
-            border: 4px solid rgba(200, 30, 20, 0.9); 
-            padding: 2px 8px; 
-            font-size: 18px; 
-            font-weight: 900; 
-            transform: rotate(-20deg); 
-            z-index: 100; 
-            pointer-events: none; 
-            border-radius: 5px; 
-            text-transform: uppercase; 
-        }
+  /* ========== INPUTS ========== */
+  .login-input{
+    width:100%; padding:14px; margin:10px 0; border:2px solid #dbe4ee;
+    border-radius:12px; text-align:center; font-size:16px; outline:none;
+    background:#f8fbff; transition:.2s;
+  }
+  .login-input:focus{border-color:var(--primary-2); background:#fff;}
 
-        .header-box { text-align: center; padding-bottom: 10px; margin-bottom: 15px; border-bottom: 2px dashed #dcdcdc; }
-        .logo-img { width: 80px; height: auto; margin-bottom: 10px; }
-        .college-name { font-size: 18px; font-weight: 800; color: #2c3e50; text-transform: uppercase; }
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; border-radius: 8px; overflow: hidden; }
-        th { background: #2c3e50; color: white; padding: 8px; font-size: 11px; }
-        td { border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 11px; font-weight: 600; }
-        
-        .bg-lec { background-color: var(--lec) !important; }
-        .bg-prac { background-color: var(--prac) !important; }
-        .bg-item { background-color: var(--item) !important; }
-        
-        .notice-box-preview { margin-top: 20px; padding: 15px; background: #fff; border: 2px solid #f1c40f; border-radius: 10px; }
-        .notice-header { color: #d35400; font-weight: 800; font-size: 14px; margin-bottom: 5px; border-bottom: 1px solid #f1c40f; }
-        .notice-content-preview { font-size: 13px; color: #000; font-weight: bold; }
-        .footer-credit { text-align: center; margin-top: 20px; font-size: 9px; color: #b9b9b9; }
-    </style>
+  .toggle-group{
+    display:flex; gap:8px; margin-bottom:16px; padding:10px;
+    background:#f4f8fc; border-radius:12px; font-size:13px; flex-wrap:wrap;
+  }
+  .toggle-group label{
+    display:flex; align-items:center; gap:6px; cursor:pointer;
+    background:#fff; padding:7px 12px; border-radius:20px;
+    border:1.5px solid #e1e9f2; font-weight:600; transition:.2s;
+  }
+  .toggle-group label:has(input:checked){background:#e8f2fb; border-color:var(--primary-2);}
+  .toggle-group input{display:none;}
+
+  .input-group{margin-bottom:14px;}
+  .row-label{
+    font-weight:700; color:var(--primary); display:block;
+    margin-bottom:6px; font-size:13px;
+  }
+  .time-card{
+    background:#f8fbff; padding:14px; border-radius:14px;
+    border-left:5px solid var(--primary-2); margin-bottom:12px;
+  }
+  .type-options{display:flex; gap:8px; margin:8px 0; font-size:12.5px; font-weight:700;}
+  .type-options label{
+    flex:1; text-align:center; padding:7px; border-radius:8px;
+    background:#fff; border:1.5px solid #e1e9f2; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; gap:5px;
+  }
+  .type-options input{display:none;}
+  .type-options label:has(input:checked){background:var(--primary-2); color:#fff; border-color:var(--primary-2);}
+
+  input[type="text"], input[type="date"], select, textarea{
+    width:100%; padding:10px 12px; border:1.5px solid #dbe4ee;
+    border-radius:10px; background:#fff; font-family:inherit; font-size:14px;
+    outline:none; margin-top:6px;
+  }
+  input:focus, select:focus, textarea:focus{border-color:var(--primary-2);}
+  select[multiple]{height:70px;}
+
+  button{
+    width:100%; padding:14px; border:none; border-radius:12px;
+    cursor:pointer; font-weight:700; font-size:15px; margin-top:10px;
+    font-family:inherit; transition:transform .15s, box-shadow .2s;
+  }
+  button:active{transform:scale(.98);}
+  button:disabled{opacity:.6; cursor:not-allowed;}
+  .btn-view{background:linear-gradient(135deg,var(--primary),var(--primary-2)); color:#fff;
+            box-shadow:0 6px 18px rgba(50,130,184,.35);}
+  .btn-publish{background:linear-gradient(135deg,#e67e22,#f39c12); color:#fff;
+               box-shadow:0 6px 18px rgba(230,126,34,.35);}
+  .btn-dl{background:linear-gradient(135deg,#27ae60,#2ecc71); color:#fff;
+          box-shadow:0 6px 18px rgba(39,174,96,.35);}
+  .btn-back{background:#e8eef5; color:var(--primary);}
+  .btn-reset{background:#fdecea; color:var(--danger);}
+
+  /* ========== PREMIUM CARD — WHITE THEME ========== */
+  #preview-section{display:none;}
+  #capture-area{
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    padding: 30px 24px 24px;
+    width: 100%;
+    max-width: 480px;
+    margin: auto;
+    border-radius: 22px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 20px 50px -20px rgba(15,76,117,.18);
+  }
+  #capture-area::before{
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: linear-gradient(90deg,#0f4c75 0%,#3282b8 40%,#27ae60 70%,#f39c12 100%);
+  }
+  #capture-area::after{
+    content: "";
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) rotate(-25deg);
+    width: 380px; height: 380px;
+    background: url('logo.jpg') center/contain no-repeat;
+    opacity: .04;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .header-box{
+    text-align: center;
+    padding-bottom: 18px;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+  }
+  .header-box::after{
+    content: "";
+    position: absolute;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 80px; height: 3px;
+    background: linear-gradient(90deg, #0f4c75, #3282b8);
+    border-radius: 3px;
+  }
+  .logo-circle{
+    display: inline-block;
+    padding: 12px;
+    background: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px #ffffff, 0 0 0 5px #dbe7f3, 0 10px 24px -8px rgba(15,76,117,.35);
+    margin-bottom: 12px;
+    position: relative;
+    z-index: 1;
+  }
+  .logo-img{
+    width: 84px; height: 84px;
+    object-fit: contain;
+    display: block;
+    border-radius: 50%;
+  }
+  .college-name{
+    font-size: 19px;
+    font-weight: 800;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+  .batch-name{
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+    background: linear-gradient(135deg, #0f4c75, #3282b8);
+    padding: 4px 14px;
+    border-radius: 20px;
+    letter-spacing: .5px;
+    margin-top: 6px;
+  }
+  #prev-schedule{ text-align: center; }
+  #prev-schedule > div:first-child{
+    display: inline-block;
+    font-size: 12px !important;
+    font-weight: 800 !important;
+    color: #fff !important;
+    background: linear-gradient(135deg, #3282b8, #0f4c75);
+    padding: 6px 16px !important;
+    border-radius: 20px;
+    margin-bottom: 12px !important;
+    letter-spacing: .4px;
+    box-shadow: 0 6px 14px -4px rgba(15,76,117,.4);
+  }
+
+  /* ========== Modern Table ========== */
+  table{
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 10px;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 18px -6px rgba(15,76,117,.15);
+    position: relative;
+    z-index: 1;
+  }
+  th{
+    background: linear-gradient(135deg, #0f4c75, #3282b8);
+    color: #fff;
+    padding: 11px 8px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+  }
+
+  /* Base table cell */
+  td{
+    border-bottom: 1px solid #e2e8f0;
+    border-right: 1px solid #e2e8f0;
+    padding: 11px 8px;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: #334155;
+    background: #ffffff;
+    line-height: 1.4;
+  }
+
+  /* Default rows (কিছু select করা না থাকলে) — হালকা gray */
+  tbody tr:not(.bg-lec):not(.bg-prac):not(.bg-item) td{
+    background: #f1f5f9;
+    color: #334155;
+  }
+  tbody tr:not(.bg-lec):not(.bg-prac):not(.bg-item):nth-child(even) td{
+    background: #e2e8f0;
+  }
+
+  /* ========== LEC = Indigo/Purple ========== */
+  tbody tr.bg-lec td{
+    background: #ddd6fe;
+    color: #4c1d95;
+    border-color: #c4b5fd;
+  }
+  tbody tr.bg-lec td:first-child{
+    border-left: 5px solid #7c3aed;
+  }
+
+  /* ========== PRAC = Soft Green ========== */
+  tbody tr.bg-prac td{
+    background: #bbf7d0;
+    color: #14532d;
+    border-color: #86efac;
+  }
+  tbody tr.bg-prac td:first-child{
+    border-left: 5px solid #16a34a;
+  }
+
+  /* ========== ITEM = Soft Pink ========== */
+  tbody tr.bg-item td{
+    background: #fbcfe8;
+    color: #831843;
+    border-color: #f9a8d4;
+  }
+  tbody tr.bg-item td:first-child{
+    border-left: 5px solid #db2777;
+  }
+
+  /* Notice box */
+  .notice-box-preview{
+    margin-top: 22px;
+    padding: 16px 18px;
+    background: linear-gradient(135deg, #ffffff 0%, #fefce8 100%);
+    border: none;
+    border-left: 5px solid #f1c40f;
+    border-radius: 12px;
+    box-shadow: 0 4px 14px -6px rgba(241,196,15,.4);
+    position: relative;
+    z-index: 1;
+    text-align: left;
+  }
+  .notice-header{
+    color: #b7791f;
+    font-weight: 800;
+    font-size: 13px;
+    margin-bottom: 8px;
+    letter-spacing: .3px;
+    padding-bottom: 6px;
+    border-bottom: 1px dashed #f1c40f;
+  }
+  .notice-content-preview{
+    font-size: 13px;
+    color: #1e2a38;
+    font-weight: 600;
+    line-height: 1.6;
+  }
+  #capture-area > div:last-of-type{
+    position: relative;
+    z-index: 1;
+    margin-top: 18px !important;
+    padding-top: 12px;
+    border-top: 1px dashed #cbd5e1;
+  }
+  .footer-credit{
+    text-align: center;
+    margin-top: 16px;
+    font-size: 9px;
+    color: #94a3b8;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 10px;
+    letter-spacing: .3px;
+    position: relative;
+    z-index: 1;
+  }
+  .correction-badge{
+    display: none;
+    position: absolute;
+    top: 20px;
+    right: 15px;
+    color: rgba(200,30,20,.92);
+    border: 4px double rgba(200,30,20,.92);
+    padding: 4px 12px;
+    font-size: 16px;
+    font-weight: 900;
+    transform: rotate(-15deg);
+    z-index: 100;
+    pointer-events: none;
+    border-radius: 6px;
+    letter-spacing: 2px;
+    background: rgba(255,255,255,.7);
+    box-shadow: 0 4px 12px rgba(200,30,20,.15);
+  }
+
+  /* ========== PUBLISHED VIEW ========== */
+  .published-card{
+    background:#fff; border-radius:18px; padding:20px;
+    box-shadow:0 8px 24px rgba(15,76,117,.12);
+    margin-bottom:16px; border-top:5px solid var(--accent);
+  }
+  .published-title{
+    font-size:14px; font-weight:800; color:var(--primary);
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:12px; flex-wrap:wrap; gap:4px;
+  }
+  .live-dot{
+    display:inline-block; width:8px; height:8px; border-radius:50%;
+    background:#27ae60; margin-right:6px;
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse{
+    0%,100%{opacity:1; transform:scale(1);}
+    50%{opacity:.4; transform:scale(1.3);}
+  }
+  .publish-time{
+    font-size:10px; color:var(--muted); font-weight:600;
+    background:#f4f8fc; padding:3px 8px; border-radius:20px;
+  }
+  #published-list{display:flex; flex-direction:column; gap:12px;}
+  .empty-state{
+    text-align:center; padding:30px 10px; color:var(--muted);
+    font-size:13px;
+  }
+  .install-banner{
+    display:none; background:#fff8e1; border:1.5px dashed #f1c40f;
+    padding:10px 14px; border-radius:12px; font-size:13px;
+    margin-bottom:14px; text-align:center;
+  }
+  .install-banner button{
+    width:auto; padding:6px 14px; font-size:12px; margin:6px 0 0;
+    background:var(--accent); color:#fff;
+  }
+  #error-msg{color:var(--danger); font-size:12px; text-align:center; font-weight:600;}
+  .toast{
+    position:fixed; bottom:20px; left:50%; transform:translateX(-50%) translateY(100px);
+    background:#1e2a38; color:#fff; padding:12px 22px; border-radius:30px;
+    font-size:13px; font-weight:600; transition:.3s; z-index:999; opacity:0;
+    max-width:90%; text-align:center;
+  }
+  .toast.show{transform:translateX(-50%) translateY(0); opacity:1;}
+  .cr-link{
+    display:block; text-align:center; margin-top:14px;
+    font-size:12px; color:var(--muted); cursor:pointer;
+    text-decoration:underline;
+  }
+  .cr-link:hover{color:var(--primary);}
+</style>
 </head>
 <body>
 
-<div class="container" id="login-section" style="display: none;">
-    <h2>Login Access</h2>
-    <input type="password" id="pass-code" class="login-input" placeholder="Enter Access Code">
-    <button class="btn-view" onclick="checkAccess()">Enter</button>
-    <p id="error-msg" style="color:red; font-size:12px; text-align:center;"></p>
+<!-- ============ PUBLIC VIEW ============ -->
+<div class="container" id="public-section">
+  <div class="app-header">
+    <img src="logo.jpg" alt="logo" class="app-logo" onerror="this.style.display='none'">
+    <div>
+      <h2>Arundeepto</h2>
+      <p class="subtitle">সর্বশেষ প্রকাশিত সিডিউল</p>
+    </div>
+  </div>
+  <div id="published-list">
+    <div class="empty-state">⏳ লোড হচ্ছে...</div>
+  </div>
+  <a class="cr-link" onclick="showLogin()">🔐 CR Login</a>
 </div>
 
-<div id="app-content" style="display: block;">
-    <div class="container">
+<!-- ============ LOGIN ============ -->
+<div class="container" id="login-section" style="display:none;">
+  <div class="logo-wrap">
+    <img src="logo.jpg" alt="Arundeepto" class="login-logo" onerror="this.style.display='none'">
+  </div>
+  <h2>Arundeepto</h2>
+  <p class="subtitle">CR Login • Access Code দিন</p>
+  <input type="password" id="pass-code" class="login-input" placeholder="Access Code">
+  <button class="btn-view" onclick="checkAccess()">প্রবেশ করুন</button>
+  <p id="error-msg"></p>
+  <a class="cr-link" onclick="showPublic()">← Public view এ ফিরে যান</a>
+</div>
+
+<!-- ============ APP (CR only) ============ -->
+<div id="app-content" style="display:none;">
+  <div class="container">
+    <div class="app-header">
+      <img src="logo.jpg" alt="logo" class="app-logo" onerror="this.style.display='none'">
+      <div>
         <h2>Arundeepto</h2>
-        <div class="toggle-group">
-            <label><input type="checkbox" id="inc-schedule" checked=""> সিডিউল</label>
-            <label><input type="checkbox" id="inc-notice" checked=""> নোটিশ</label>
-            <label><input type="checkbox" id="inc-correction"> <span style="color:red; font-weight:bold;">সংশোধিত</span></label>
-        </div>
-
-        <div class="input-group">
-            <span class="row-label">সিডিউলের তারিখ</span>
-            <input type="date" id="date-schedule">
-        </div>
-
-        <div id="fields">
-            <div class="input-group" style="background:#f4f4f4; padding:10px; border-radius:8px;">
-                <span class="row-label">08:00 - 10:00</span>
-                <select id="sub0" onchange="updateTeachers(0)"><option value="">Subject</option><option value="Anatomy">Anatomy</option><option value="Biochemistry">Biochemistry</option><option value="Physiology">Physiology</option></select>
-                
-                <div class="type-options">
-                    <label><input type="checkbox" id="lec0"> Lec</label>
-                    <label><input type="checkbox" id="prac0"> Prac</label>
-                    <label><input type="checkbox" id="item0"> Item</label>
-                </div>
-                
-                <input type="text" placeholder="Topic" id="top0" style="margin-top:5px;">
-                <select id="teach0" multiple="" style="margin-top:5px; height:60px;"></select>
-            </div>
-        
-            <div class="input-group" style="background:#f4f4f4; padding:10px; border-radius:8px;">
-                <span class="row-label">10:30 - 12:30</span>
-                <select id="sub1" onchange="updateTeachers(1)"><option value="">Subject</option><option value="Anatomy">Anatomy</option><option value="Biochemistry">Biochemistry</option><option value="Physiology">Physiology</option></select>
-                
-                <div class="type-options">
-                    <label><input type="checkbox" id="lec1"> Lec</label>
-                    <label><input type="checkbox" id="prac1"> Prac</label>
-                    <label><input type="checkbox" id="item1"> Item</label>
-                </div>
-                
-                <input type="text" placeholder="Topic" id="top1" style="margin-top:5px;">
-                <select id="teach1" multiple="" style="margin-top:5px; height:60px;"></select>
-            </div>
-        
-            <div class="input-group" style="background:#f4f4f4; padding:10px; border-radius:8px;">
-                <span class="row-label">12:30 - 14:30</span>
-                <select id="sub2" onchange="updateTeachers(2)"><option value="">Subject</option><option value="Anatomy">Anatomy</option><option value="Biochemistry">Biochemistry</option><option value="Physiology">Physiology</option></select>
-                
-                <div class="type-options">
-                    <label><input type="checkbox" id="lec2"> Lec</label>
-                    <label><input type="checkbox" id="prac2"> Prac</label>
-                    <label><input type="checkbox" id="item2"> Item</label>
-                </div>
-                
-                <input type="text" placeholder="Topic" id="top2" style="margin-top:5px;">
-                <select id="teach2" multiple="" style="margin-top:5px; height:60px;"></select>
-            </div>
-        </div>
-
-        <div class="input-group">
-            <span class="row-label">নোটিশের তারিখ</span>
-            <input type="date" id="date-notice">
-        </div>
-        <div class="input-group">
-            <span class="row-label">নোটিশের বিবরণ</span>
-            <textarea id="notice" placeholder="নোটিশ এখানে লিখুন..." rows="3"></textarea>
-        </div>
-        
-        <div class="input-group">
-            <span class="row-label">Announced by</span>
-            <select id="announced-by">
-                <option value="Munaf Wasif">Munaf Wasif</option>
-                <option value="Umme Salma">Umme Salma</option>
-            </select>
-        </div>
-        <button class="btn-view" onclick="showPreview()">প্রিভিউ দেখুন</button>
+        <p class="subtitle">Schedule & Notice Generator</p>
+      </div>
     </div>
+
+    <div class="install-banner" id="install-banner">
+      📱 App ইনস্টল করতে চান? <br>
+      <button onclick="installPWA()">Install App</button>
+    </div>
+
+    <div class="toggle-group">
+      <label><input type="checkbox" id="inc-schedule" checked><span>📚 সিডিউল</span></label>
+      <label><input type="checkbox" id="inc-notice" checked><span>📢 নোটিশ</span></label>
+      <label><input type="checkbox" id="inc-correction"><span style="color:var(--danger)">✍️ সংশোধিত</span></label>
+    </div>
+
+    <div class="input-group">
+      <span class="row-label">📅 সিডিউলের তারিখ</span>
+      <input type="date" id="date-schedule">
+    </div>
+
+    <div id="fields"></div>
+
+    <div class="input-group">
+      <span class="row-label">📅 নোটিশের তারিখ</span>
+      <input type="date" id="date-notice">
+    </div>
+    <div class="input-group">
+      <span class="row-label">📝 নোটিশের বিবরণ</span>
+      <textarea id="notice" placeholder="নোটিশ এখানে লিখুন..." rows="3"></textarea>
+    </div>
+    <div class="input-group">
+      <span class="row-label">👤 Announced by</span>
+      <select id="announced-by">
+        <option value="Abdur Rouf">Abdur Rouf</option>
+        <option value="Umme Salma">Umme Salma</option>
+      </select>
+    </div>
+
+    <button class="btn-view" onclick="showPreview()">👁️ প্রিভিউ দেখুন</button>
+    <button class="btn-publish" onclick="publishSchedule(event)">🚀 Publish for Everyone</button>
+    <button class="btn-reset" onclick="resetForm()">🗑️ Reset Form</button>
+    <button class="btn-back" onclick="logout()">← লগআউট</button>
+  </div>
 </div>
 
-<div id="preview-section">
-    <div class="container">
-        <div id="capture-area">
-            <div id="correction-stamp" class="correction-badge">সংশোধিত</div>
-            <div class="header-box">
-                <img src="./Arundeepto - Schedule Maker_files/l.jpg" alt="Logo" class="logo-img">
-                <div class="college-name">Nilphamari Medical College</div>
-                <div style="font-size: 13px; font-style: italic;">Arundeepto</div>
-            </div>
-            
-            <div id="prev-schedule">
-                <div style="font-weight:bold; margin-bottom:5px; font-size: 13px; text-align:center;">Class Schedule | <span id="res-date-schedule"></span></div>
-                <table>
-                    <thead><tr><th>Time</th><th>Subject</th><th>Topic</th><th>Teacher</th></tr></thead>
-                    <tbody id="table-body"></tbody>
-                </table>
-            </div>
-
-            <div id="prev-notice" class="notice-box-preview">
-                <div class="notice-header">📢 Batch Notice</div>
-                <div style="font-size: 11px; margin-bottom: 5px; color: #666;">Date: <span id="res-date-notice"></span></div>
-                <div id="res-notice" class="notice-content-preview"></div>
-            </div>
-
-            <div style="text-align: right; margin-top: 10px; font-size: 11px; font-weight: bold; color: #555;">
-                Announced by: <span id="res-announcer"></span>
-            </div>
-            <div class="footer-credit">© 2026 | Arundeepto | IT Team | Developed by: Munaf Wasif</div>
+<!-- ============ PREVIEW ============ -->
+<div id="preview-section" style="display:none;">
+  <div class="container">
+    <div id="capture-area">
+      <div id="correction-stamp" class="correction-badge">সংশোধিত</div>
+      <div class="header-box">
+        <div class="logo-circle">
+          <img src="logo.jpg" alt="Logo" class="logo-img" onerror="this.style.display='none'">
         </div>
-        <button class="btn-dl" onclick="downloadImage()">Download Image</button>
-        <button class="btn-back" onclick="hidePreview()">Back</button>
+        <div class="college-name">Nilphamari Medical College</div>
+        <div class="batch-name">Arundeepto • Batch 08</div>
+      </div>
+
+      <div id="prev-schedule">
+        <div style="font-weight:700; margin-bottom:8px; font-size:13px; color:var(--primary);">
+          📚 Class Schedule | <span id="res-date-schedule"></span>
+        </div>
+        <table>
+          <thead><tr><th>Time</th><th>Subject</th><th>Topic</th><th>Teacher</th></tr></thead>
+          <tbody id="table-body"></tbody>
+        </table>
+      </div>
+
+      <div id="prev-notice" class="notice-box-preview">
+        <div class="notice-header">📢 Batch Notice</div>
+        <div style="font-size:11px; margin-bottom:6px; color:#888;">Date: <span id="res-date-notice"></span></div>
+        <div id="res-notice" class="notice-content-preview"></div>
+      </div>
+
+      <div style="text-align:right; margin-top:10px;">
+        <span style="display:inline-block; background:#f4f8fc; padding:5px 12px; border-radius:20px; color:#0f4c75; font-size:11px; font-weight:700;">
+          ✍️ Announced by: <span id="res-announcer"></span>
+        </span>
+      </div>
+      <div class="footer-credit">© 2026 | Arundeepto | IT Team | Developed by: Munaf Wasif</div>
     </div>
+    <button class="btn-dl" onclick="downloadImage(event)">⬇️ Download Image</button>
+    <button class="btn-back" onclick="hidePreview()">← Back</button>
+  </div>
 </div>
 
-<script>
-    const crCodes = { "7777": "ABDUR ROUF", "1111": "Umme Salma" };
-    function checkAccess() {
-        const inputCode = document.getElementById('pass-code').value;
-        if (crCodes[inputCode]) {
-            document.getElementById('announced-by').value = crCodes[inputCode];
-            document.getElementById('login-section').style.display = 'none';
-            document.getElementById('app-content').style.display = 'block';
-        } else {
-            document.getElementById('error-msg').innerText = "ভুল কোড!";
-        }
+<div class="toast" id="toast"></div>
+
+<!-- ============ FIREBASE MODULE ============ -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import {
+  getFirestore, collection, addDoc, query, orderBy, limit,
+  onSnapshot, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, signInAnonymously }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+/* ============ Firebase Config ============ */
+const firebaseConfig = {
+  apiKey: "AIzaSyCV1lsgvGVq66O1aId4lxm0YjrAW54b6WU",
+  authDomain: "anando-ee1df.firebaseapp.com",
+  projectId: "anando-ee1df",
+  storageBucket: "anando-ee1df.firebasestorage.app",
+  messagingSenderId: "530257917831",
+  appId: "1:530257917831:web:39a8718ddfa0d2f8eac522"
+};
+
+const app  = initializeApp(firebaseConfig);
+const db   = getFirestore(app);
+const auth = getAuth(app);
+
+signInAnonymously(auth).catch(err=>{
+  console.warn("Anonymous auth failed:", err.message);
+});
+
+/* ============ ACCESS CODES ============ */
+const crCodes = { "7777":"Abdur Rouf", "1111":"Umme Salma" };
+
+/* ============ TEACHER DATA ============ */
+const teacherData = {
+  "Anatomy":["Dr. Shamima Ma'am","Dr. Farzana Ma'am","Dr. Noman Sir","Dr. Anup Sir","Dr. Millat Sir","Dr. Samira Ma'am","Dr. Paromita Ma'am"],
+  "Biochemistry":["Dr. Mazed Sir","Dr. Ayesha Ma'am","Dr. Hadiuzzaman Sir","Dr. Hasinur Sir","Dr. Naima Ma'am","Dr. Irin Ma'am"],
+  "Physiology":["Dr. Shila Ma'am","Dr. Liza Ma'am","Dr. Sara Ma'am","Dr. Bipasha Ma'am","Dr. Tritiya Ma'am","Dr. Kashfi Ma'am"]
+};
+
+const scheduleTimes = ["08:00 - 10:00","10:30 - 12:30","12:30 - 14:30"];
+
+/* ============ BUILD FORM ============ */
+const container = document.getElementById('fields');
+scheduleTimes.forEach((time,i)=>{
+  container.innerHTML += `
+    <div class="time-card">
+      <span class="row-label">⏰ ${time}</span>
+      <select id="sub${i}" onchange="window.updateTeachers(${i})">
+        <option value="">-- Subject নির্বাচন করুন --</option>
+        ${Object.keys(teacherData).map(s=>`<option value="${s}">${s}</option>`).join('')}
+      </select>
+      <div class="type-options">
+        <label><input type="checkbox" id="lec${i}">Lec</label>
+        <label><input type="checkbox" id="prac${i}">Prac</label>
+        <label><input type="checkbox" id="item${i}">Item</label>
+      </div>
+      <input type="text" placeholder="📖 Topic" id="top${i}">
+      <select id="teach${i}" multiple></select>
+    </div>`;
+});
+
+window.updateTeachers = function(i){
+  const sub = document.getElementById(`sub${i}`).value;
+  const sel = document.getElementById(`teach${i}`);
+  sel.innerHTML = '';
+  if(sub && teacherData[sub]){
+    teacherData[sub].forEach(t=>{
+      const o = document.createElement('option');
+      o.value = t; o.text = t; sel.appendChild(o);
+    });
+  }
+};
+
+/* ============ NAV ============ */
+window.showLogin = function(){
+  document.getElementById('public-section').style.display='none';
+  document.getElementById('login-section').style.display='block';
+  document.getElementById('app-content').style.display='none';
+  document.getElementById('preview-section').style.display='none';
+  window.scrollTo(0,0);
+};
+window.showPublic = function(){
+  document.getElementById('public-section').style.display='block';
+  document.getElementById('login-section').style.display='none';
+  document.getElementById('app-content').style.display='none';
+  document.getElementById('preview-section').style.display='none';
+  window.scrollTo(0,0);
+};
+window.logout = function(){
+  document.getElementById('pass-code').value='';
+  document.getElementById('error-msg').innerText='';
+  showPublic();
+};
+
+/* ============ LOGIN (auto-fill) ============ */
+window.checkAccess = function(){
+  const code = document.getElementById('pass-code').value.trim();
+  if(crCodes[code]){
+    const name = crCodes[code];
+    const sel = document.getElementById('announced-by');
+    let found = false;
+    for(let opt of sel.options){
+      if(opt.value === name){ found = true; break; }
     }
+    if(!found){
+      const o = document.createElement('option');
+      o.value = name; o.text = name;
+      sel.appendChild(o);
+    }
+    sel.value = name;
 
-    const teacherData = {
-        "Anatomy": ["Dr. Shamima Ma'am", "Dr. Farzana Ma'am", "Dr. Noman Sir", "Dr. Anup Sir", "Dr. Millat Sir","Dr Samira Ma'am", "Dr Paromita Ma'am"],
-        "Biochemistry": ["Dr. Mazed Sir", "Dr. Ayesha Ma'am", "Dr. Hadiuzzaman Sir", "Dr. Hasinur Sir", "Dr. Naima Ma'am", "Dr Irin Ma'am"],
-        "Physiology": ["Dr. Shila Ma'am", "Dr. Liza Ma'am", "Dr. Sara Ma'am", "Dr. Bipasha Ma'am","Dr. Tritiya Ma'am", "Dr Kashfi Ma'am"]
-    };
+    document.getElementById('login-section').style.display='none';
+    document.getElementById('app-content').style.display='block';
+    toast(`স্বাগতম, ${name}!`);
+  } else {
+    document.getElementById('error-msg').innerText = "❌ ভুল কোড! আবার চেষ্টা করুন।";
+  }
+};
 
-    const scheduleTimes = ["08:00 - 10:00", "10:30 - 12:30", "12:30 - 14:30"];
-    const container = document.getElementById('fields');
+/* ============ DATE FORMAT ============ */
+function formatDate(d){
+  if(!d) return "—";
+  const [y,m,day] = d.split('-');
+  const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  return `${day} ${months[+m-1]}, ${y}`;
+}
+window.formatDate = formatDate;
 
-    scheduleTimes.forEach((time, index) => {
-        container.innerHTML += `
-            <div class="input-group" style="background:#f4f4f4; padding:10px; border-radius:8px;">
-                <span class="row-label">${time}</span>
-                <select id="sub${index}" onchange="updateTeachers(${index})"><option value="">Subject</option>${Object.keys(teacherData).map(s => `<option value="${s}">${s}</option>`).join('')}</select>
-                
-                <div class="type-options">
-                    <label><input type="checkbox" id="lec${index}"> Lec</label>
-                    <label><input type="checkbox" id="prac${index}"> Prac</label>
-                    <label><input type="checkbox" id="item${index}"> Item</label>
-                </div>
-                
-                <input type="text" placeholder="Topic" id="top${index}" style="margin-top:5px;">
-                <select id="teach${index}" multiple style="margin-top:5px; height:60px;"></select>
-            </div>
-        `;
+/* ============ COLLECT FORM DATA ============ */
+function collectFormData(){
+  const rows = [];
+  scheduleTimes.forEach((time,i)=>{
+    const sub  = document.getElementById(`sub${i}`).value;
+    const top  = document.getElementById(`top${i}`).value;
+    const sel  = document.getElementById(`teach${i}`);
+    const teach= Array.from(sel.selectedOptions).map(o=>o.value);
+    const isL  = document.getElementById(`lec${i}`).checked;
+    const isP  = document.getElementById(`prac${i}`).checked;
+    const isI  = document.getElementById(`item${i}`).checked;
+
+    if(sub || top || teach.length){
+      rows.push({ time, subject: sub, topic: top, teachers: teach,
+                  lec: isL, prac: isP, item: isI });
+    }
+  });
+
+  return {
+    dateSchedule : document.getElementById('date-schedule').value,
+    dateNotice   : document.getElementById('date-notice').value,
+    notice       : document.getElementById('notice').value,
+    announcer    : document.getElementById('announced-by').value,
+    showSchedule : document.getElementById('inc-schedule').checked,
+    showNotice   : document.getElementById('inc-notice').checked,
+    showCorrection: document.getElementById('inc-correction').checked,
+    rows
+  };
+}
+
+/* ============ PREVIEW ============ */
+window.showPreview = function(){
+  const d = collectFormData();
+  document.getElementById('prev-schedule').style.display   = d.showSchedule?'block':'none';
+  document.getElementById('prev-notice').style.display     = d.showNotice?'block':'none';
+  document.getElementById('correction-stamp').style.display= d.showCorrection?'block':'none';
+  document.getElementById('res-announcer').innerText       = d.announcer;
+  document.getElementById('res-date-schedule').innerText   = formatDate(d.dateSchedule);
+  document.getElementById('res-date-notice').innerText     = formatDate(d.dateNotice);
+  document.getElementById('res-notice').innerText          = d.notice || '—';
+
+  const tbody = document.getElementById('table-body');
+  tbody.innerHTML = '';
+  if(d.rows.length === 0){
+    tbody.innerHTML = `<tr><td colspan="4" style="color:#999;">কোনো class যোগ করা হয়নি</td></tr>`;
+  } else {
+    d.rows.forEach(r=>{
+      let cls = r.lec?'bg-lec':(r.prac?'bg-prac':(r.item?'bg-item':''));
+      let types=[]; if(r.lec)types.push('Lec'); if(r.prac)types.push('Prac'); if(r.item)types.push('Item');
+      const typeStr = types.length?`<b>[${types.join(', ')}]</b> `:'';
+      tbody.innerHTML += `<tr class="${cls}">
+        <td>${r.time}</td><td>${r.subject||'—'}</td>
+        <td>${typeStr}${r.topic||'—'}</td>
+        <td>${r.teachers.join(', ')||'—'}</td></tr>`;
+    });
+  }
+
+  document.getElementById('app-content').style.display='none';
+  document.getElementById('preview-section').style.display='block';
+  window.scrollTo(0,0);
+};
+
+window.hidePreview = function(){
+  document.getElementById('app-content').style.display='block';
+  document.getElementById('preview-section').style.display='none';
+};
+
+/* ============ DOWNLOAD ============ */
+window.downloadImage = function(ev){
+  const btn = ev.target;
+  btn.innerText='⏳ তৈরি হচ্ছে...'; btn.disabled=true;
+  html2canvas(document.querySelector("#capture-area"),{scale:3, backgroundColor:'#ffffff'})
+    .then(canvas=>{
+      const link = document.createElement('a');
+      const date = document.getElementById('date-schedule').value || 'schedule';
+      link.download = `Arundeepto_${date}.png`;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+      btn.innerText='⬇️ Download Image'; btn.disabled=false;
+    });
+};
+
+/* ============ PUBLISH ============ */
+window.publishSchedule = async function(ev){
+  const data = collectFormData();
+  if(!data.dateSchedule){
+    toast('⚠️ সিডিউলের তারিখ দিন!'); return;
+  }
+  if(data.rows.length === 0 && !data.notice){
+    toast('⚠️ অন্তত একটা class বা notice যোগ করুন!'); return;
+  }
+
+  const btn = ev.target;
+  btn.innerText = '⏳ Publishing...'; btn.disabled = true;
+
+  try {
+    if(!auth.currentUser){
+      await signInAnonymously(auth);
+    }
+    await addDoc(collection(db, "schedules"), {
+      ...data,
+      createdAt: serverTimestamp()
+    });
+    toast('✅ সফলভাবে publish হয়েছে! সবাই এখন দেখতে পাবে।');
+    btn.innerText = '🚀 Publish for Everyone'; btn.disabled = false;
+  } catch(err){
+    console.error(err);
+    toast('❌ Publish ব্যর্থ: ' + err.message);
+    btn.innerText = '🚀 Publish for Everyone'; btn.disabled = false;
+  }
+};
+
+/* ============ RESET ============ */
+window.resetForm = function(){
+  if(!confirm('সব data মুছে যাবে। নিশ্চিত?')) return;
+  scheduleTimes.forEach((_,i)=>{
+    document.getElementById(`sub${i}`).value='';
+    document.getElementById(`top${i}`).value='';
+    document.getElementById(`teach${i}`).innerHTML='';
+    document.getElementById(`lec${i}`).checked=false;
+    document.getElementById(`prac${i}`).checked=false;
+    document.getElementById(`item${i}`).checked=false;
+  });
+  document.getElementById('date-schedule').value='';
+  document.getElementById('date-notice').value='';
+  document.getElementById('notice').value='';
+  toast('🗑️ Form reset হয়েছে');
+};
+
+/* ============ TOAST ============ */
+let toastTimer;
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.innerText = msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 2800);
+}
+window.toast = toast;
+
+/* ============ PUBLIC VIEW — Real-time ============ */
+const pubList = document.getElementById('published-list');
+
+const q = query(
+  collection(db, "schedules"),
+  orderBy("createdAt", "desc"),
+  limit(5)
+);
+
+onSnapshot(q, (snap)=>{
+  pubList.innerHTML = '';
+  if(snap.empty){
+    pubList.innerHTML = `<div class="empty-state">
+      📭 এখনো কোনো সিডিউল publish হয়নি।<br>
+      <span style="font-size:11px;">CR login করে প্রথম সিডিউল publish করুন।</span>
+    </div>`;
+    return;
+  }
+
+  snap.forEach(doc=>{
+    const d = doc.data();
+    const t = d.createdAt?.toDate ? d.createdAt.toDate() : new Date();
+    const timeStr = t.toLocaleString('en-GB',{
+      day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'
     });
 
-    function updateTeachers(index) {
-        const sub = document.getElementById(`sub${index}`).value;
-        const teachSelect = document.getElementById(`teach${index}`);
-        teachSelect.innerHTML = '';
-        if (sub && teacherData[sub]) {
-            teacherData[sub].forEach(t => {
-                let option = document.createElement('option');
-                option.value = t;
-                option.text = t;
-                // option.selected = true; // এই লাইনটি সরিয়ে দিয়েছি, তাই এখন অটো সিলেক্ট হবে না।
-                teachSelect.appendChild(option);
-            });
-        }
+    let rowsHtml = '';
+    (d.rows||[]).forEach(r=>{
+      let cls = r.lec?'bg-lec':(r.prac?'bg-prac':(r.item?'bg-item':''));
+      let types=[]; if(r.lec)types.push('Lec'); if(r.prac)types.push('Prac'); if(r.item)types.push('Item');
+      const typeStr = types.length?`<b>[${types.join(', ')}]</b> `:'';
+      rowsHtml += `<tr class="${cls}">
+        <td>${r.time}</td><td>${r.subject||'—'}</td>
+        <td>${typeStr}${r.topic||'—'}</td>
+        <td>${(r.teachers||[]).join(', ')||'—'}</td></tr>`;
+    });
+
+    const card = document.createElement('div');
+    card.className = 'published-card';
+
+    let html = `
+      <div class="published-title">
+        <span><span class="live-dot"></span>📅 ${formatDate(d.dateSchedule)}</span>
+        <span class="publish-time">${timeStr}</span>
+      </div>`;
+
+    if(d.showSchedule && rowsHtml){
+      html += `<table>
+        <thead><tr><th>Time</th><th>Subject</th><th>Topic</th><th>Teacher</th></tr></thead>
+        <tbody>${rowsHtml}</tbody></table>`;
     }
 
-    function formatDate(dateStr) {
-        if (!dateStr) return "";
-        const [y, m, d] = dateStr.split('-');
-        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        return `${d} ${months[parseInt(m) - 1]}, ${y}`;
+    if(d.showNotice && (d.notice || d.dateNotice)){
+      html += `<div class="notice-box-preview">
+        <div class="notice-header">📢 Batch Notice</div>
+        ${d.dateNotice?`<div style="font-size:11px; margin-bottom:6px; color:#888;">Date: ${formatDate(d.dateNotice)}</div>`:''}
+        <div class="notice-content-preview">${(d.notice||'—').replace(/\n/g,'<br>')}</div>
+      </div>`;
     }
 
-    function showPreview() {
-        document.getElementById('prev-schedule').style.display = document.getElementById('inc-schedule').checked ? 'block' : 'none';
-        document.getElementById('prev-notice').style.display = document.getElementById('inc-notice').checked ? 'block' : 'none';
-        document.getElementById('correction-stamp').style.display = document.getElementById('inc-correction').checked ? 'block' : 'none';
-        document.getElementById('res-announcer').innerText = document.getElementById('announced-by').value;
-        document.getElementById('res-date-schedule').innerText = formatDate(document.getElementById('date-schedule').value);
-        document.getElementById('res-date-notice').innerText = formatDate(document.getElementById('date-notice').value);
-        document.getElementById('res-notice').innerText = document.getElementById('notice').value;
-        
-        const tbody = document.getElementById('table-body');
-        tbody.innerHTML = '';
-        
-        scheduleTimes.forEach((time, index) => {
-            const sub = document.getElementById(`sub${index}`).value;
-            const top = document.getElementById(`top${index}`).value;
-            const teachSelect = document.getElementById(`teach${index}`);
-            const selectedTeachers = Array.from(teachSelect.selectedOptions).map(option => option.value).join(', ');
-            const isLec = document.getElementById(`lec${index}`).checked;
-            const isPrac = document.getElementById(`prac${index}`).checked;
-            const isItem = document.getElementById(`item${index}`).checked;
-
-            if(sub || top || selectedTeachers) {
-                let rowClass = isLec ? "bg-lec" : (isPrac ? "bg-prac" : (isItem ? "bg-item" : ""));
-                let types = [];
-                if (isLec) types.push("Lec"); if (isPrac) types.push("Prac"); if (isItem) types.push("Item");
-                let typeString = types.length > 0 ? `<b>[${types.join(', ')}]</b> ` : "";
-                tbody.innerHTML += `<tr class="${rowClass}"><td>${time}</td><td>${sub}</td><td>${typeString}${top}</td><td>${selectedTeachers}</td></tr>`;
-            }
-        });
-
-        document.getElementById('app-content').style.display = 'none';
-        document.getElementById('preview-section').style.display = 'block';
+    if(d.announcer){
+      html += `<div style="text-align:right; margin-top:10px; font-size:11px; font-weight:700; color:#555;">
+        Announced by: ${d.announcer}
+      </div>`;
     }
 
-    function hidePreview() {
-        document.getElementById('app-content').style.display = 'block';
-        document.getElementById('preview-section').style.display = 'none';
-    }
+    card.innerHTML = html;
+    pubList.appendChild(card);
+  });
+}, (err)=>{
+  console.error(err);
+  pubList.innerHTML = `<div class="empty-state">⚠️ ডেটা লোড করা যাচ্ছে না। Firebase rules চেক করুন।</div>`;
+});
 
-    function downloadImage() {
-        html2canvas(document.querySelector("#capture-area"), {scale: 3}).then(canvas => {
-            const link = document.createElement('a');
-            link.download = 'Schedule_Notice.png';
-            link.href = canvas.toDataURL("image/png");
-            link.click();
-        });
-    }
+/* ============ PWA ============ */
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', e=>{
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('install-banner').style.display='block';
+});
+window.installPWA = function(){
+  if(!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(()=>{
+    document.getElementById('install-banner').style.display='none';
+    deferredPrompt=null;
+  });
+};
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}
 </script>
-
-
-</body></html>
+</body>
+</html>
